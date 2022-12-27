@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %} All Posts | Dhi Darpan {% endblock %}
+{% load static %}
+{% block content %}
+<style>
+    .form-control{
+        border: none;
+        border-bottom: 2px gray solid;
+        border-radius: 0px;
+    }
+    .form-control:focus{
+        border: none;
+        outline: 0;
+        border-bottom: 2px orangered solid;
+        border-radius: 0px;
+        box-shadow: none;
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+<div class="card-cont">
+    <div class="srch">
+        <form class="form-inline my-2 my-lg-0" action="{% url 'home' %}">
+            <input class="form-control sform mr-sm-2" type="search"   placeholder="Search by title" aria-label="Search" name="search">
+            <button class="sbtn btn my-2 my-sm-0" type="submit"><img src="{% static 'img/loupe.png' %}" alt="Search" width="25" height="25"></button>
+        </form>
+    </div>
+{% if ol_count > -1 %}
+<br>
+{% if ol_count == 0 %}
+<br><br><br><br><br>
+<p class="centr"><b>Sorry, No results found!</b></p>
+<br><br><br><br><br>
+{% else %}
+<p class="centr"><b>{{ ol_count }} results found!</b></p>
+<br>
+{% endif %}
+{% endif %}
+    <div class="row">
+        {% for post in post_list %}
+        <div class="post-card col">
+            <a href={% url 'post_detail' post.slug %}><img class="thumb" src="../media/{{ post.thumbnail }}" alt="{{ post.slug }}"></a>
+            <p class="text-muted"><small><small><b>{{post.author.first_name}} {{ post.author.last_name }} | {{ post.created_on }}</b></small></small></p>
+            <h5><strong><a class="topost" href={% url 'post_detail' post.slug %}>{{ post.title }}</a></strong></h5>
+            
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if post_list.has_other_pages %}
+<br><br><br>
+<div class="centr">
+  <div class="paginations">
+    {% if post_list.has_previous %}
+    <a href="?page={{ post_list.previous_page_number }}">&laquo; </a>
+    <a href="?page={{ post_list.previous_page_number }}" >{{ post_list.previous_page_number }}</a>
+    {% endif %}
+    <a href="#" class="active">{{ post_list.number }}</a>
+    {% if post_list.has_next %}
+    <a href="?page={{ post_list.next_page_number }}" >{{ post_list.next_page_number }}</a>
+    <a >.</a>
+    <a >.</a>
+    <a >.</a>
+    <a href="?page={{ post_list.paginator.num_pages }}" >{{ post_list.paginator.num_pages }}</a>
+    <a href="?page={{ post_list.next_page_number }}">&raquo;</a>
+   {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %} Your Posts | Dhi Darpan {% endblock %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<style>
+    .dp-img{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        box-shadow: 0px 0px 1px 2px white;
+        margin-right: 0em;
+    }
+    
+    .in-box{
+        padding: 0;
+        min-width: 200px;
+   
+        color: orangered;
+    }
+    .in-box h5{
+        margin-top: 0em;
+        color: black;
+    }
+    .in-box p{
+        color: gray;
+    }
+    .in-box a{
+        color: orangered;
+    }
+
+    .bg-cl{
+        background-color: yellowgreen;
+        min-width: 200px;
+        
+    }
+    .tnam{
+        padding-top: 5px;
+    }
+    .icinfo{
+        min-height: 200px;
+        min-width: 200px;
+        padding: 0;
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+    .post-card{
+        min-height: 0%;
+    }
+    .full-box{
+        justify-content: center;
+    }
+    .bgs{
+        background-color: gray;
+        color: white;
+    }
+</style>
+<div class="container topgap"><br>
+    <div class="card" id="usr-list">
+        {% if users_count > 0 %}
+        <h5 class="centr bgs"><b>Our Authors</b></h5><br>
+        <div class="row">
+            {% for usr in authors %} 
+                         <div class="post-card col">
+                            <div class="row justify-content-md-center centr full-box">
+                                <img class="dp-img" src=" {{ usr.profileinfo.display_picture.url }}">
+                                <div class="in-box col-md-8">
+                                    <h5 class="centr"><b><a style="color: black;" href="{% url 'profile' usr.id %}">{{ usr.first_name }} {{ usr.last_name }}</a></b></h5> 
+                                    {% if usr.profileinfo.website_url %}
+                                    <h4><a href="{{ usr.profileinfo.website_url }}"><small><img src="{% static 'img/world-wide-web.png' %}" width="15" height="15"></small></a>  |  
+                                    {% endif %}
+                                    {% if usr.profileinfo.facebook_url %}
+                                    <a href="{{ usr.profileinfo.facebook_url }}"><small><img src="{% static 'img/fbl.png' %}" width="15" height="15"></small></a>  |  
+                                    {% endif %}
+                                    {% if usr.profileinfo.twitter_url %}
+                                    <a href="{{ usr.profileinfo.twitter_url }}"><small><img src="{% static 'img/tw.png' %}" width="15" height="15"></small></a>  |  
+                                    {% endif %}
+                                    {% if usr.profileinfo.linkedin_url %}
+                                    <a href="{{ usr.profileinfo.linkedin_url }}"><small><img src="{% static 'img/linkedin.png' %}" width="15" height="15"></small></a>  |  
+                                    {% endif %}
+                                    {% if usr.profileinfo.youtube_url %}
+                                    <a href="{{ usr.profileinfo.youtube_url }}"><small><img src="{% static 'img/yt.png' %}" width="15" height="15"></small></a>
+                                    {% endif %}
+                                    </h4>
+                                    <p><small>{{ usr.profileinfo.bio | slice:100 }}...</small></p> 
+                                </div>
+                            </div>
+                        </div>              
+            {% endfor %}
+            </div>
+            <br>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% if user.is_authenticated %}
+        {% if perms.blog.add_post %}
+            {% if user.id == usr_id %}
+                <br><br>
+                <h2 class="centr"><b>Your Posts</b></h2>
+                <br>
+                <div class="centr"><a href="{% url 'add_post' %}"><button class="btn btn-secondary">New Post</button></a></div>
+                <br><br>
+                {% if active_count > 0 %}
+                <h5 class="centr" style="color: green;"><b>Published:</b></h5>
+                <div class="row" >
+                {% for post in user_posts_active %}
+                
+                    <div class="post-card col">
+                        <a href={% url 'post_detail' post.slug %}><img class="thumb" src="../../media/{{ post.thumbnail }}" alt="{{ post.slug }}"></a>
+                        <h5><a class="topost" href={% url 'post_detail' post.slug %}>{{ post.title }}</a></h5>
+                        <a href="{% url 'update_post' post.slug %}"><button class="btn btn-primary">Edit</button></a>
+                        <button class="btn btn-danger" 
+                        hx-delete="{% url 'delete-post' post.slug %}"
+                        hx-target="#post-list"
+                        hx-confirm="Are you sure?">Delete</button>
+                    </div>
+                
+                {% endfor %}
+                </div>
+                {% endif %}
+                {% if draft_count > 0 %}
+                <h5 class="centr" style="color: red;"><b>Drafts:</b></h5>
+                <div class="row" >
+                    {% for post in user_posts_draft %}
+                    
+                        <div class="post-card col">
+                            <a href={% url 'post_detail' post.slug %}><img class="thumb" src="../../media/{{ post.thumbnail }}" alt="{{ post.slug }}"></a>
+                            <h5><a class="topost" href={% url 'post_detail' post.slug %}>{{ post.title }}</a></h5>
+                            <a href="{% url 'update_post' post.slug %}"><button class="btn btn-primary">Edit</button></a>
+                            <button class="btn btn-danger" 
+                            hx-delete="{% url 'delete-post' post.slug %}"
+                            hx-target="#post-list"
+                            hx-confirm="Are you sure?">Delete</button>
+                        </div>
+                    
+                    {% endfor %}
+                 </div> 
+                 {% endif %}  
+            {% else %}
+                Sorry, You are accessing Wrong User.
+            {% endif %}
+        {% else %}
+                <br><br><br><br><br><br><br>
+                <div class="centr"> Sorry, You don't have permission to Access this area.</div>
+                <br><br><br><br><br><br>
+        {% endif %}
+{% else %}
+                <div class="centr">
+                    <p><b> Please Login to Add a Post. </b></p>
+                    <a href="{% url 'login'%}"><button class="btn btn-primary">Login</button></a><br><br><br><br><br><br>
+                    <p>Don't Have An Account?</p>
+                    <a href="{% url 'register'%}"><button class="btn btn-primary">Register</button></a>
+                </div>
+{% endif %}

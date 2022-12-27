@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load static %}
+<head>
+    <meta property="og:url"           content="bhargavvv.pythonanywhere.com{% url 'post_detail' post.slug %}" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="{{ post.title }}" />
+    <meta property="og:description"   content="{{ post.slug }}" />
+    <meta property="og:image"         content="{{ post.thumbnail }}" />
+</head>
+<body>
+<style>
+    a.text-muted{
+        font-size: unset;
+    }
+    .cbin{
+        padding: 0;
+    }
+    .cbin p{
+        font-size: medium;
+    }
+    .title{
+        font-size: x-large;
+    }
+    .text-muted{
+        font-size: small;
+    }
+    .container{
+        padding-left: 12px;
+    }
+    .post-gap{
+        padding-top: 5rem;
+    }
+    .row{
+        border: 1px lightgray solid;
+        border-radius: 5px ;
+    }
+    .pd-flex{
+        display: flex;
+    }
+    .pd-none{
+        display: none;
+    }
+    .pd-block{
+        display: block;
+    }
+    .info{
+        font-size: small;
+    }
+    .cmmt{
+        color: whitesmoke; 
+        border: 2px solid transparent; 
+        border-radius: 5px; 
+        background-color: transparent; 
+        margin-left: 1.3em; 
+        margin-bottom: 0.8em; 
+        width: 30;
+    }
+    .rply{
+        border: 2px solid transparent; 
+        border-radius: 5px; 
+        background-color: transparent;
+    }
+    .cmnt-box{
+        color: green; 
+        border-bottom: 1px solid green;
+    }
+    .rply-box{
+        color: red; 
+        border-bottom: 1px solid red;
+    }
+    .trnsprnt{
+        background-color: transparent;
+    }
+    .p3em{
+        margin-top: 1.3em;
+    }
+    .p10{
+        padding: 10px;
+    }
+    .pl50{
+        padding-left: 50px;
+    }
+    .blk{
+        color:rgb(38, 37, 41);
+    }
+    .blu{
+        color: blue;
+    }
+    .lar{
+        border-bottom:1px solid grey ;
+    }
+    .full-box{
+        margin-left: 35px;
+        border: none;
+    }
+
+    .dp-img{
+        margin-top: 25px;
+        margin-left: 25px;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        position: absolute;
+        border-radius: 50%;
+        box-shadow: 0px 0px 1px 2px white;
+    }
+    .dp-box{
+        clip-path: polygon(0 0, 0 0, 100% 100%, 0 100%);
+        padding: 0;
+        min-width: 200px;
+        min-height: 200px;
+        background-color: orangered;
+        max-width: 200px;
+        border-bottom: 1px orangered solid;
+    }
+    .dp-box2{
+        position: absolute;
+        clip-path: polygon(0 0, 0 0, 100% 100%, 100% 0%);
+        padding: 0;
+        min-width: 200px;
+        min-height: 200px;
+        max-width: 200px;
+        border-right: none;
+    }
+    .in-box{
+        margin-left: 0px;
+        padding: 0;
+        min-width: 200px;
+        border-bottom: 1px orangered solid;
+        border-left: none;
+        color: orangered;
+    }
+    .in-box h5{
+        margin-top: 1em;
+        color: black;
+    }
+    .in-box p{
+        color: gray;
+    }
+    .in-box a{
+        color: orangered;
+    }
+
+    .bg-cl{
+        background-color: yellowgreen;
+        min-width: 200px;
+        
+    }
+    .tnam{
+        padding-top: 5px;
+    }
+    .icinfo{
+        min-height: 200px;
+        min-width: 200px;
+        padding: 0;
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+    .card{
+        border: none;
+    }
+    .blk p{
+        font-size: smaller;
+    }
+    .text-red{
+        color: red;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .cbin p{
+            font-size: smaller;
+        }
+        .full-box{
+        margin-left: 20px;
+    }
+    }
+</style>
+
+
+<div class="container topgap post-gap">
+    <div class="row justify-content-md-center">
+        <div class="col-md-12 card mb-4 mt-3 left top">
+            <div class="card-body cbin">
+                <h4 class="title"><strong>{% block title %} {{ post.title }}  {% endblock title %}</strong></h4>
+                <p class="text-muted"><a class="text-muted" href="{% url 'profile' post.author.id %}"><small><b>{{ post.author.first_name }} {{ post.author.last_name }}</b></small></a><small><b> | {{ post.created_on }} | </b></small>
+                    {% if user.id == post.author.id %}
+                    <a class="text-red" href="{% url 'update_post' post.slug %}"><small><b>Edit</b></small></a>
+                </p>
+                    {% endif %}
+                    <hr>
+                <p>{{ post.content | safe }}</p>
+            </div>
+            <hr>
+            <div class="pd-flex justify-between">
+                {% include 'likes.html' %}
+                <button type="button" class="cmmt" onclick="show_content('0','comment-form'), usr_details('0')">
+                    <img src=" {% static 'img/comment.png' %} " alt="Comment." width="25" height="25" >
+                </button>
+            </div>
+            <hr>
+        </div>
+        <div id="comment-box" class="col-md-12 card mb-4 mt-3 pd-none">
+            <div class="card-body trnsprnt">
+                <h3> Leave A Comment</h3>
+                <form method="post" class="p3em">
+                    {{ comment_form | crispy }}
+                    {% csrf_token %}
+                    <center><button onclick="show_content('0','comment-form')" class="ct-btn" type="submit">Submit</button></center>
+                </form>
+            </div>
+            <hr>
+        </div>
+        <div class="row col-md-12 full-box">
+            <div class="dp-box col-md-3"> 
+            </div> 
+            <div class="dp-box2 col-md-3">
+            </div>
+            <img class="dp-img" src=" {{ post.author.profileinfo.display_picture.url }}">
+            <div class="in-box col-md-9">
+                <a href="{% url 'profile' post.author.username %}"><h5><b>{{ post.author.first_name }} {{ post.author.last_name }}</b></h5></a> 
+                <p><small>{{ post.author.profileinfo.bio | slice:400 }}...</small></p>
+                {% if post.author.profileinfo.website_url %}
+                <a href="http://{{ post.author.profileinfo.website_url }}"><small><img src="{% static 'img/world-wide-web.png' %}" width="15" height="15"></small></a>|
+                {% endif %}
+                {% if post.author.profileinfo.facebook_url %}
+                <a href="http://{{ post.author.profileinfo.facebook_url }}"><small><img src="{% static 'img/fb.png' %}" width="15" height="15"></small></a>|
+                {% endif %}
+                {% if post.author.profileinfo.twitter_url %}
+                <a href="http://{{ post.author.profileinfo.twitter_url }}"><small><img src="{% static 'img/tw.png' %}" width="15" height="15"></small></a>|
+                {% endif %}
+                {% if post.author.profileinfo.linkedin_url %}
+                <a href="http://{{ post.author.profileinfo.linkedin_url }}"><small><img src="{% static 'img/linkedin.png' %}" width="15" height="15"></small></a>|
+                {% endif %}
+                {% if post.author.profileinfo.youtube_url %}
+                <a href="http://{{ post.author.profileinfo.youtube_url }}"><small><img src="{% static 'img/yt.png' %}" width="15" height="15"></small></a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-12 card mb-4 mt-3">
+            <div class="card-body ">
+                <h5> {{ comments.count }} Comments</h5>
+                {% for comment in comments %}
+                <div class="comments" class="p10">
+                    <p class="font-weight-bold cmnt-box">
+                        {{ comment.name }} |
+                        <span class="text-muted font-weight-normal"><small>{{ comment.commented_on }}</small></span>
+                    </p>
+                    <div class="font-weight-normal blk">
+                     {{ comment.body | linebreaks }}
+                    </div>
+                    <button class="rply" onclick='show_content("{{ forloop.counter }}","reply-form"), usr_details("{{ forloop.counter }}")'> 
+                        <img src=" {% static 'img/reply.png' %} " alt="Reply." width="25" height="25" >
+                    </button>
+                    <hr>
+                    <form id="reply-form-{{ forloop.counter }}" action="." method="post" class="pd-none">
+                        <p class="font-weight-bold lar">Leave A Reply:</p>
+                        {{ comment_form | crispy }}
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <center><input onclick='show_content("{{ forloop.count }}","reply-form")' class="ct-btn" type="submit" value="Reply"></center>
+                        <hr>
+                    </form>
+                    <h6 class="blu">
+                        <button type="button" class="font-weight-bold show_replies" onclick="show_content( '{{ forloop.counter }}', 'replies')">
+                        {{ comment.replies.all.count }} Replies
+                        </button>
+                    </h6>
+                    <div id="reply-box-{{ forloop.counter }}" class="pd-none">
+                    {% for reply in comment.replies.all %}
+                    {% if reply.active %}
+                    <div class="replies p10 pl50" s>
+                        <p class="font-weight-bold rply-box" >{{ reply.name }} | <span class="text-muted font-weight-normal"><small>{{ reply.commented_on }}</small></span></p>
+                        <p class="font-weight-normal"> {{ reply.body }}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    </div>
+                    <hr>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if user.is_authenticated %}
+<script>
+    function usr_details(n){
+        let i=0;
+        i = parseInt(n);
+        let usr_name = document.querySelectorAll(".cname");
+        let usr_mail = document.querySelectorAll(".cemail");
+        usr_name[i].hidden = 'true';
+        usr_mail[i].hidden = 'true';
+        usr_name[i].value = '{{ user }}';
+        usr_mail[i].value = '{{ user.email }}';
+    }
+</script>
+{% else %}
+<script>
+    function usr_details(n){}
+</script>
+{% endif %}
+</body>
+{% endblock content %}

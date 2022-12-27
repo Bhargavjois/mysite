@@ -1,0 +1,13 @@
+{% load widget_tweaks %}
+{% load static %}
+        <div class="dp-cont centr" id="dpscreen">
+        <img class="dp-image" src='{{ user.profileinfo.display_picture.url }}'>
+        <br>
+        <div class="vis-btn">
+        {% render_field profile_form.display_picture class="form-dp" %} 
+        <button class="visual" type="button"><img src="{% static 'img/image.png' %}" width="25" height="25"></button>
+        <button class="visual del" type="button"  hx-delete="{% url 'deletedp' user.id %}" hx-target="#dpscreen" hx-confirm="Are You Sure? You can change DP instead."><img src="{% static 'img/delete.png' %}" width="20" height="20"></button>
+        <br><small style="color: red;"><small>Your Image will be updated only on Submitting Form.</small></small>
+        </div>
+        </div>
+        

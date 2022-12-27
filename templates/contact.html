@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %} Contact Us | Dhi Darpan {% endblock %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<style>
+    .contact{
+        color:orangered;
+    }
+    .ct{
+        border: none;
+        border-bottom: 2px gray solid;
+        border-radius: 0px;
+    }
+    .ct:focus{
+        border: none;
+        outline: 0;
+        border-bottom: 2px orangered solid;
+        border-radius: 0px;
+        box-shadow: none;
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+<div class="container topgap">
+    <div class="row justify-content-md-center">
+        <div class="col-md-6 card mb-4 mt-3 top">
+            <div class="card-body centr">
+                <h3 class="centr"><b>CONTACT US</b></h3>
+                {% if msg_name %}
+                    <br/><br/><br/><br/><br/>
+                    <h3>Thanks {{ msg_name }}!</h3>
+                    <span class="grn" >Messege sent succesfully!</span>
+                    <br/><br/><br/><br/><br/>
+                {% else %}
+                <br>
+                <form class="centr" method='post'>
+                    {% csrf_token %}
+                    {{ contact_form | crispy }}
+                    <input id="senb"  class="ct-btn" type="submit" value="Send">
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %} {{ usr.username }}'s Profile | Dhi Darpan {% endblock %}
+{% block content %}
+{% load static %}
+<style>
+    .dp-img{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        box-shadow: 0px 0px 1px 2px white;
+        margin-right: 1em;
+    }
+    
+    .in-box{
+        padding: 0;
+        min-width: 200px;
+   
+        color: orangered;
+    }
+    .in-box h5{
+        margin-top: 0em;
+        color: black;
+    }
+    .in-box p{
+        color: gray;
+    }
+    .in-box a{
+        color: orangered;
+    }
+
+    .bg-cl{
+        background-color: yellowgreen;
+        min-width: 200px;
+        
+    }
+    .tnam{
+        padding-top: 5px;
+    }
+    .icinfo{
+        min-height: 200px;
+        min-width: 200px;
+        padding: 0;
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+    .post-card{
+        min-height: 0%;
+    }
+    .full-box{
+        justify-content: center;
+    }
+    
+</style>
+<div class="container topgap">
+    <div class="row justify-content-md-center">
+        <div class="col-md-10 card mb-4 mt-3 top">
+            <div class="card-body centr">
+                <p class="card-text centr"></p>
+                <h3 class="centr"><b>User Profile</b></h3>
+                <hr><br><br>
+                <div class="row justify-content-md-center full-box">
+               
+                <img class="dp-img" src=" {{ usr.profileinfo.display_picture.url }}">
+                <div class="in-box col-md-8">
+                    <h5><b>{{ usr.first_name }} {{ usr.last_name }}</b></h5> 
+                    {% if usr.profileinfo.website_url %}
+                    <h4><a href="{{ usr.profileinfo.website_url }}"><small><img src="{% static 'img/world-wide-web.png' %}" width="15" height="15"></small></a>  |  
+                    {% endif %}
+                    {% if usr.profileinfo.facebook_url %}
+                    <a href="{{ usr.profileinfo.facebook_url }}"><small><img src="{% static 'img/fbl.png' %}" width="15" height="15"></small></a>  |  
+                    {% endif %}
+                    {% if usr.profileinfo.twitter_url %}
+                    <a href="{{ usr.profileinfo.twitter_url }}"><small><img src="{% static 'img/tw.png' %}" width="15" height="15"></small></a>  |  
+                    {% endif %}
+                    {% if usr.profileinfo.linkedin_url %}
+                    <a href="{{ usr.profileinfo.linkedin_url }}"><small><img src="{% static 'img/linkedin.png' %}" width="15" height="15"></small></a>  |  
+                    {% endif %}
+                    {% if usr.profileinfo.youtube_url %}
+                    <a href="{{ usr.profileinfo.youtube_url }}"><small><img src="{% static 'img/yt.png' %}" width="15" height="15"></small></a>
+                    {% endif %}
+                    </h4>
+                    <p><small>{{ usr.profileinfo.bio }}</small></p> 
+                </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+    </div>
+</div>
+{% if posts %}
+<div class="card-cont topgap">
+<h5 class="centr"><b> Posts From Author: </b></h5>
+        <div class="row">
+            {% for post in posts %}
+            <div class="post-card col">
+                <a href={% url 'post_detail' post.slug %}><img class="thumb" src="../media/{{ post.thumbnail }}" alt="{{ post.slug }}"></a>
+                <p class="text-muted"><small><small><b>{{post.author}} | {{ post.created_on }}</b></small></small></p>
+                <h5><strong><a class="topost" href={% url 'post_detail' post.slug %}>{{ post.title }}</a></strong></h5>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
